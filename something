@@ -1,0 +1,36 @@
+// import {ChatOpenAI} from "langchain/chat_models/openai";
+// import {DynamicStructuredTool} from "langchain/tools";
+// import {z} from 'zod'
+// const llm = new ChatOpenAI({
+//   temperature: 0.7, // Creativity level
+//   modelName: "gpt-3.5-turbo" // or "gpt-4"
+// });
+
+// const getInfo = new DynamicStructuredTool({
+//   name:"gSort",
+//   description:'garbage sort',
+//   schema:z.object({
+//     item: z.string(),
+//     city: z.string()
+//   }),
+//   func: async ({ item, city }) => {
+//     // Logic or DB lookup
+//     if (item.toLowerCase().includes("plastic") && city.toLowerCase() === "delhi") {
+//       return "Blue bin";
+//     } else {
+//       return "General waste";
+//     }
+//   }
+// });
+// const executor = await initializeAgentExecutorWithOptions(
+//   [getInfo],
+//   llm,
+//   {
+//     agentType: "zero-shot-react-description", // agent logic style
+//     verbose: true, // debug info
+//     maxIterations: 3
+//   }
+// )
+
+// const result = await executor.run("How to dispose plastic bottle in Delhi?");
+// console.log(result);
