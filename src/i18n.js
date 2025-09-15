@@ -7,12 +7,22 @@ const resources = {
     translation: {
       pincode: "What is your area pincode?",
       done: "Proceed",
+      ask: "Ask your queries in the form of:",
+      processing: "Processing Information ...",
+      text: "Text",
+      audio: "Audio",
+      images: "Images"
     },
   },
   hi: {
     translation: {
       pincode: "आपके क्षेत्र का पिनकोड क्या है?",
-      done: "आगे बढ़ें"
+      done: "आगे बढ़ें",
+      ask: "अपने प्रश्न इस रूप में पूछें",
+      processing:"जानकारी एकत्रित कर रहे हैं ...",
+      text: "लिख कर",
+      audio: "बोल कर",
+      images: "तसवीर डाल कर"
     },
   },
 }

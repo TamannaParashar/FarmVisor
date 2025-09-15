@@ -32,3 +32,28 @@ main {
       rgba(156, 39, 176, 0.3);
   }
 }
+@keyframes slideInFromLeft {
+    0% {
+      transform: translateX(-100px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .animate-slide-in-1 {
+    animation: slideInFromLeft 0.8s ease-out 0.2s both;
+  }
+  
+  .animate-slide-in-2 {
+    animation: slideInFromLeft 0.8s ease-out 0.6s both;
+  }
+  
+  .animate-slide-in-3 {
+    animation: slideInFromLeft 0.8s ease-out 1s both;
+  }
+  .animate-slide-in-4 {
+    animation: slideInFromLeft 0.8s ease-out 1.4s both;
+  }

@@ -11,10 +11,10 @@ const farmerSchema = new mongoose.Schema({
     lang:{
         type:String
     },
-    pincode:{
+    queries:[{
         type:String,
         required:true
-    }
+    }]
 })
 const fInfo = mongoose.models.fInfo || mongoose.model("fInfo",farmerSchema);
 export default fInfo;
