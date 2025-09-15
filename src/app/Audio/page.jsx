@@ -3,6 +3,7 @@ import { useState, useRef } from "react"
 
 export default function AudioRecorder() {
   const [recording, setRecording] = useState(false)
+  const [text,setText] = useState("");
   const [audioURL, setAudioURL] = useState("")
   const [loading, setLoading] = useState(false)
   const mediaRecorderRef = useRef(null)
@@ -40,7 +41,7 @@ export default function AudioRecorder() {
 
           const data = await res.json()
           console.log("Transcribed text:", data.text)
-
+          setText(data.text);
           setAudioURL(URL.createObjectURL(blob))
         } catch (err) {
           console.error("Transcription failed:", err)
@@ -82,6 +83,7 @@ export default function AudioRecorder() {
           <audio controls src={audioURL}></audio>
         </div>
       )}
+      {text && !loading && (<div className="text-purple-600">{text}</div>)}
     </div>
   )
 }

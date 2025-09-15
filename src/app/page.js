@@ -14,7 +14,13 @@ export default function Landing() {
       <div className="min-h-screen relative overflow-hidden">
         <Image src="/bg.webp" fill={true} className="object-cover absolute opacity-80" alt="Background image" priority/>
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-black/40 to-purple-800/30"></div>
-        <main className="relative z-10 flex items-center justify-center min-h-screen">FarmVisor</main>
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center">
+          <main>FarmVisor</main>
+          <p className="text-black font-bold text-4xl mt-0 mb-0 animate-caret-blink" style={{textShadow:'2px 2px 2px white'}}>
+            AI powered advisory system
+          </p>
+        </div>
+
         <div className="absolute top-4 right-4 z-20">
           <button onClick={() => signIn("google", { callbackUrl: "/Home" })} className="relative bg-black text-white rounded-lg px-6 py-3 font-extrabold transition-all duration-300 shadow-lg hover:bg-gray-900 border border-purple-500/30 backdrop-blur-sm">
             <span className="relative z-10">Sign In</span>
@@ -28,6 +34,5 @@ export default function Landing() {
       </div>
     )
   }
-
   router.push("/Home")
 }

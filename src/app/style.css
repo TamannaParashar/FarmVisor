@@ -32,28 +32,153 @@ main {
       rgba(156, 39, 176, 0.3);
   }
 }
-@keyframes slideInFromLeft {
-    0% {
-      transform: translateX(-100px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateX(0);
-      opacity: 1;
-    }
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
   }
-  
-  .animate-slide-in-1 {
-    animation: slideInFromLeft 0.8s ease-out 0.2s both;
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
   }
-  
-  .animate-slide-in-2 {
-    animation: slideInFromLeft 0.8s ease-out 0.6s both;
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
   }
-  
-  .animate-slide-in-3 {
-    animation: slideInFromLeft 0.8s ease-out 1s both;
+  100% {
+    transform: translate(0px, 0px) scale(1);
   }
-  .animate-slide-in-4 {
-    animation: slideInFromLeft 0.8s ease-out 1.4s both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(147, 51, 234, 0.6);
+  }
+}
+
+/* Animation classes */
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+.animate-slide-up-1 {
+  animation: slide-up 0.6s ease-out;
+}
+
+.animate-slide-up-2 {
+  animation: slide-up 0.6s ease-out 0.1s both;
+}
+
+.animate-slide-up-3 {
+  animation: slide-up 0.6s ease-out 0.2s both;
+}
+
+.animate-slide-up-4 {
+  animation: slide-up 0.6s ease-out 0.3s both;
+}
+
+.animate-slide-in-1 {
+  animation: fade-in 0.6s ease-out;
+}
+
+.animate-slide-in-2 {
+  animation: fade-in 0.6s ease-out 0.2s both;
+}
+
+.animate-slide-in-3 {
+  animation: fade-in 0.6s ease-out 0.4s both;
+}
+
+/* Custom hover effects */
+.hover-glow:hover {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .mobile-stack {
+    flex-direction: column;
+  }
+
+  .mobile-full {
+    width: 100%;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9333ea;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
+}
+
+/* Focus styles for accessibility */
+.focus-ring:focus {
+  outline: 2px solid #9333ea;
+  outline-offset: 2px;
+}
+
+/* Loading spinner enhancement */
+.spinner-enhanced {
+  border-width: 3px;
+  border-style: solid;
+  border-color: #9333ea transparent #9333ea transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

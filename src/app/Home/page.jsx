@@ -3,19 +3,22 @@ import { useTranslation } from "react-i18next"
 import i18n from "./../../i18n"
 import { signOut } from "next-auth/react"
 import { useRef, useState } from "react"
-import '../style.css'
-export default function Home() {
-  const [pin,setPin] = useState(true);
-  const [loading, setLoading] = useState(false)
-  const [uploadOptions,setUploadOptions] = useState(false);
-  const [text,setText] = useState(false);
+import "../style.css"
+import { useRouter } from "next/navigation"
 
+export default function Home() {
+  const [pin, setPin] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [uploadOptions, setUploadOptions] = useState(false)
+  const [text, setText] = useState(false)
+
+  const router = useRouter()
   const { t } = useTranslation()
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang)
   }
 
-  const inputRefs = Array.from({ length: 6 }, () => useRef(null))
+  const inputRefs = Array.from({ length: 6 }, (_, i) => useRef(null))
   const handleChange = (e, index) => {
     const value = e.target.value
 
@@ -32,115 +35,246 @@ export default function Home() {
       inputRefs[index - 1].current.focus()
     }
   }
-const handleSubmit= async()=>{
-  const pincode = inputRefs.map(ref => ref.current?.value || "").join("")
-  setLoading(true)
-  try{
-  const res = await fetch('/api/locationWeather',{
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ pincode }),
-  });
-  const data = await res.json();
-  console.log(data);
-  setPin(false);
-  setUploadOptions(true);
-  }finally{
-    setLoading(false);
-  }
-}
 
-const handleText=()=>{
-    setUploadOptions(false)
-    setText(true);
-}
-
-const txt = useRef(null);
-
-const handleTextSubmission=async()=>{
-    const query = txt.current.value;
-    const text = await fetch('/api/addFarmer',{
+  const handleSubmit = async () => {
+    const pincode = inputRefs.map((ref) => ref.current?.value || "").join("")
+    setLoading(true)
+    try {
+      const res = await fetch("/api/locationWeather", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-    });
-    await text.json();
-}
-  return (
-    <div>
-      <div className="mb-4">
-        <button onClick={()=>signOut({callbackUrl:'/'})} className="px-3 py-1 border-2 border-purple-600 rounded-lg font-bold mr-2">SignOut</button>
-        <button onClick={() => changeLanguage("en")} className="px-3 py-1 border-2 border-purple-600 ro rounded-lg font-bold mr-2">English</button>
-        <button onClick={() => changeLanguage("hi")} className="px-3 py-1 border-2 border-purple-600 ro rounded-lg font-bold mr-2">हिंदी</button>
-      </div>
-      {pin && <div className="flex justify-center">
-      <div className="border-2 border-purple-600 bg-gradient-to-r from-purple-600 to-black w-[50%]">
-      <h2 className="text-xl font-bold text-center m-4 text-white">{t("pincode")}</h2>
-      <div className="flex justify-center align-middle">
-        {Array.from({ length: 6 }, (_, i) => (
-          <input key={i} type="text" maxLength={1} ref={inputRefs[i]} onChange={(e) => handleChange(e, i)}
-            className="w-12 p-3 m-2 rounded-lg text-white font-bold bg-purple-600 text-center border-2 border-white"
-          />
-        ))}
-        </div>
-        <div><button onClick={handleSubmit} className="bg-white text-black rounded-lg shadow-lg p-2 m-5 flex justify-center items-center">{t("done")}</button></div>
-      </div>
-      </div>}
+        body: JSON.stringify({ pincode }),
+      })
+      const data = await res.json()
+      console.log(data)
+      setPin(false)
+      setUploadOptions(true)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-      {loading && !uploadOptions && (
-        <div className="flex flex-col justify-center items-center h-40">
-            <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-lg font-bold text-purple-600">
-            {t("processing")}
-            </p>
+  const handleText = () => {
+    setUploadOptions(false)
+    setText(true)
+  }
+
+  const txt = useRef(null)
+
+  const handleTextSubmission = async () => {
+    const query = txt.current.value
+    const text = await fetch("/api/addFarmer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }),
+    })
+    await text.json()
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100 relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-40 w-80 h-80 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+      </div>
+
+      <header className="relative z-10 flex justify-between items-center p-6 bg-white/80 backdrop-blur-sm border-b border-purple-200 shadow-sm">
+        <div className="flex items-center space-x-3">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
+            {t("title")}
+          </h1>
         </div>
+
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 bg-purple-50 rounded-lg p-1">
+            <button onClick={() => changeLanguage("en")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-purple-700 hover:text-purple-800">English</button>
+            <button onClick={() => changeLanguage("hi")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-purple-700 hover:text-purple-800">हिंदी</button>
+          </div>
+          <button onClick={() => signOut({ callbackUrl: "/" })} className="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">{t("sgnO")}</button>
+        </div>
+      </header>
+
+      <div className="relative z-10 container mx-auto px-6 py-8">
+        {pin && (
+          <div className="max-w-4xl mx-auto">
+            <div className="flex justify-center mb-12">
+              <div className="bg-white rounded-2xl shadow-2xl p-8 border border-purple-200 max-w-md w-full transform hover:scale-105 transition-all duration-300">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">{t("pincode")}</h3>
+                </div>
+
+                <div className="flex justify-center space-x-2 mb-6">
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <input
+                      key={i}
+                      type="text"
+                      maxLength={1}
+                      ref={inputRefs[i]}
+                      onChange={(e) => handleChange(e, i)}
+                      className="w-12 h-12 text-center text-xl font-bold border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 bg-purple-50 text-purple-800"
+                    />
+                  ))}
+                </div>
+
+                <button onClick={handleSubmit} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold text-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">{t("done")}</button>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-up-1">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 mb-2">{t("h1")}</h3>
+                <p className="text-gray-600 text-sm">{t("f1")}</p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-up-2">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12,3.25C12,3.25 6,10 6,14C6,17.32 8.69,20 12,20A6,6 0 0,0 18,14C18,10 12,3.25 12,3.25M14.47,9.97L15.53,11.03L9.53,17.03L8.47,15.97M9.75,10A1.25,1.25 0 0,1 11,11.25A1.25,1.25 0 0,1 9.75,12.5A1.25,1.25 0 0,1 8.5,11.25A1.25,1.25 0 0,1 9.75,10M14.25,14.5A1.25,1.25 0 0,1 15.5,15.75A1.25,1.25 0 0,1 14.25,17A1.25,1.25 0 0,1 13,15.75A1.25,1.25 0 0,1 14.25,14.5Z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 mb-2">{t("h2")}</h3>
+                <p className="text-gray-600 text-sm">{t("f2")}</p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-up-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 mb-2">{t("h3")}</h3>
+                <p className="text-gray-600 text-sm">{t("f3")}</p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-up-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 mb-2">{t("h4")}</h3>
+                <p className="text-gray-600 text-sm">{t("f4")}</p>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl p-8 text-white shadow-2xl">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <h3 className="text-3xl font-bold mb-4">{t("down1")}</h3>
+                  <p className="text-purple-100 mb-6 text-lg leading-relaxed">{t("down")}</p>
+                  <div className="flex space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      <span className="text-sm">{t("accurate")}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                      <span className="text-sm">{t("eff")}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                      <span className="text-sm">{t("smart")}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="relative">
+                  <img
+                    src="/down.webp"
+                    alt="AI Agriculture Technology"
+                    className="rounded-xl shadow-lg w-full h-64 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent rounded-xl"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
 
-      {uploadOptions &&
-      <div className="flex flex-col items-center space-y-6 mt-8">
-        <h1 className="animate-slide-in-1 flex items-center justify-center w-80 h-20 bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group text-white text-xl font-bold">{t("ask")}</h1>
-  {/* Text Option */}
-        <div className="animate-slide-in-2 flex items-center justify-center w-80 h-20 bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group">
-            <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-            </div>
-            <button className="text-white text-xl font-bold" onClick={handleText}>{t("text")}</button>
-            </div>
-        </div>
+        {loading && !uploadOptions && (
+          <div className="flex flex-col justify-center items-center h-40 animate-pulse">
+            <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-6 text-xl font-bold text-purple-600">{t("processing")}</p>
+            <p className="text-purple-500 mt-2">Analyzing your location data...</p>
+          </div>
+        )}
 
-        {/* Audio Option */}
-        <div className="animate-slide-in-3 flex items-center justify-center w-80 h-20 bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group">
-            <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.793L4.617 14H2a1 1 0 01-1-1V7a1 1 0 011-1h2.617l3.766-2.793a1 1 0 011.617.793zm7.447 2.171a1 1 0 011.414 0A9.972 9.972 0 0120 10a9.972 9.972 0 01-1.756 4.753 1 1 0 11-1.788-.894A7.973 7.973 0 0018 10a7.973 7.973 0 00-1.544-3.859 1 1 0 010-1.414zM15.264 5.93a1 1 0 011.414 0 5.984 5.984 0 010 8.14 1 1 0 11-1.414-1.414 3.984 3.984 0 000-5.312 1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
+        {uploadOptions && (
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12 animate-fade-in">
+              <h2 className="text-4xl font-bold text-gray-800 mb-4">How can I help you today?</h2>
+              <p className="text-xl text-gray-600">Choose your preferred way to interact with FarmVisor</p>
             </div>
-            <button className="text-white text-xl font-bold">{t("audio")}</button>
-            </div>
-        </div>
 
-        {/* Images Option */}
-        <div className="animate-slide-in-4 flex items-center justify-center w-80 h-20 bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group">
-            <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                </svg>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-white rounded-2xl p-8 shadow-xl border border-purple-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-in-1">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("text")}</h3>
+                  <p className="text-gray-600 mb-6">Type your questions about crops, weather, or farming techniques</p>
+                  <button onClick={handleText} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl">Start Typing</button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-8 shadow-xl border border-purple-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-in-2">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("audio")}</h3>
+                  <p className="text-gray-600 mb-6">Speak naturally in your preferred language for instant help</p>
+                  <button onClick={() => router.push("/Audio")} className="w-full py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-bold hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl">Start Speaking</button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-8 shadow-xl border border-purple-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-in-3">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("images")}</h3>
+                  <p className="text-gray-600 mb-6">Upload photos of crops, pests, or diseases for instant analysis</p>
+                  <button className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl">Upload Photo</button>
+                </div>
+              </div>
             </div>
-            <button className="text-white text-xl font-bold">{t("images")}</button>
+          </div>
+        )}
+
+        {text && (
+          <div className="max-w-2xl mx-auto animate-fade-in">
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-purple-100">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Ask Your Question</h3>
+              <div className="space-y-4">
+                <textarea
+                  ref={txt}
+                  placeholder="Enter your farming question here..."
+                  className="w-full p-4 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 resize-none h-32 text-gray-700"
+                />
+                <button onClick={handleTextSubmission} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl">Get AI Advice</button>
+              </div>
             </div>
-        </div>
-        </div>
-      }
-      {text &&
-      <div>
-      <input type="text" name="txt" id="txt" ref={txt} placeholder="Enter your query" />
-      <button onClick={handleTextSubmission}>Done</button></div>
-      }
+          </div>
+        )}
+      </div>
     </div>
   )
 }
