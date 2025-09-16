@@ -11,12 +11,12 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [uploadOptions, setUploadOptions] = useState(false)
   const [text, setText] = useState(false)
-
   const router = useRouter()
   const { t } = useTranslation()
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang)
   }
+  const [proceed,setProceed] = useState("done")
 
   const inputRefs = Array.from({ length: 6 }, (_, i) => useRef(null))
   const handleChange = (e, index) => {
@@ -39,6 +39,7 @@ export default function Home() {
   const handleSubmit = async () => {
     const pincode = inputRefs.map((ref) => ref.current?.value || "").join("")
     setLoading(true)
+    setProceed("loading")
     try {
       const res = await fetch("/api/locationWeather", {
         method: "POST",
@@ -69,6 +70,11 @@ export default function Home() {
       body: JSON.stringify({ query }),
     })
     await text.json()
+  }
+
+  const handleBack=()=>{
+    setUploadOptions(true);
+    setText(false);
   }
 
   return (
@@ -122,7 +128,7 @@ export default function Home() {
                   ))}
                 </div>
 
-                <button onClick={handleSubmit} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold text-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">{t("done")}</button>
+                <button onClick={handleSubmit} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold text-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">{t(proceed)}</button>
               </div>
             </div>
 
@@ -212,7 +218,7 @@ export default function Home() {
         {uploadOptions && (
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 animate-fade-in">
-              <h2 className="text-4xl font-bold text-gray-800 mb-4">How can I help you today?</h2>
+              <h2 className="text-4xl font-bold text-gray-800 mb-4">Get your queries cleared</h2>
               <p className="text-xl text-gray-600">Choose your preferred way to interact with FarmVisor</p>
             </div>
 
@@ -272,6 +278,7 @@ export default function Home() {
                 <button onClick={handleTextSubmission} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl">Get AI Advice</button>
               </div>
             </div>
+            <button className="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg py-3 px-4 m-4" onClick={()=>handleBack()}>Go Back</button>
           </div>
         )}
       </div>

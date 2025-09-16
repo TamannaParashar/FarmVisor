@@ -22,13 +22,10 @@ export default function AudioRecorder() {
 
       mediaRecorderRef.current.onstop = async () => {
         setLoading(true)
-
         const blob = new Blob(chunksRef.current, { type: "audio/wav" })
-        chunksRef.current = [] // reset for next recording
-
+        chunksRef.current = []
         const formData = new FormData()
         formData.append("file", blob, "farmer_audio.wav")
-
         try {
           const res = await fetch("/api/audioTranscribe", {
             method: "POST",

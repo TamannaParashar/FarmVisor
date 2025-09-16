@@ -34,3 +34,26 @@
 
 // const result = await executor.run("How to dispose plastic bottle in Delhi?");
 // console.log(result);
+
+const handleMic=async()=>{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true}); //MIC PERMISSION FROM BROWSER
+    const mediaRecorder = new MediaRecorder(stream);
+    let chunks = [] //AUDIO RECORDED TO BE COLLECTED IN CHUNKS
+    mediaRecorder.ondataavailable = (e) => {
+      chunks.push(e.data)
+    }
+    mediaRecorder.onstop = () => { //ONCES STOPPED COMBINE IT IN 1 BLOB
+      const blob = new Blob(chunks, { type: "audio/wav" })
+      console.log("Recorded Blob:", blob)
+      const formData = new FormData(); //APPEND TO FORMDATA AND USE IT AS PER USE
+      formData.append("file",blob,"farmer_audio.wav")
+    }
+    mediaRecorder.start();
+    -------
+    mediaRecorder.stop();
+}
+//BLOBE IS WARPPED INTO FORMDATA AND SENT TO BACKEND
+//FETCH IT AND UPLOAD IT TEMPERARILY IN UPLOAD FOLDER
+//THEN WHISPER IS CALLED(SPAWN ALLOWS USING IT ALONG WITH OTHER LIBRARIES)
+//GENERATES .TXT FILE
+//TRANSCRIBED TEXT SENT TO MONGO
