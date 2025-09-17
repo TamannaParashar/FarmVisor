@@ -35,12 +35,16 @@ export async function POST(req) {
       return NextResponse.json({ error: "Weather data unavailable" }, { status: 500 })
     }
 
+    const iconCode = weatherData.weather[0].icon
+    const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`
+
     return NextResponse.json({
       location: display_name,lat,lon,
       weather: {
         temp: weatherData.main.temp,
         humidity: weatherData.main.humidity,
         description: weatherData.weather[0].description,
+        icon:iconUrl,
       },
     })
   } catch (error) {

@@ -5,12 +5,17 @@ import { signOut } from "next-auth/react"
 import { useRef, useState } from "react"
 import "../style.css"
 import { useRouter } from "next/navigation"
+import { createPortal } from "react-dom"
 
 export default function Home() {
   const [pin, setPin] = useState(true)
   const [loading, setLoading] = useState(false)
   const [uploadOptions, setUploadOptions] = useState(false)
   const [text, setText] = useState(false)
+  const [icon,setIcon] = useState();
+  const [weather,setWeather] = useState("")
+  const [loc,setLoc] = useState("")
+  const [showWeather, setShowWeather] = useState(false);
   const router = useRouter()
   const { t } = useTranslation()
   const changeLanguage = (lang) => {
@@ -48,6 +53,9 @@ export default function Home() {
       })
       const data = await res.json()
       console.log(data)
+      setIcon(data.weather.icon)
+      setWeather(data.weather);
+      setLoc(data.location)
       setPin(false)
       setUploadOptions(true)
     } finally {
@@ -93,9 +101,33 @@ export default function Home() {
         </div>
 
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2 bg-purple-50 rounded-lg p-1">
-            <button onClick={() => changeLanguage("en")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-purple-700 hover:text-purple-800">English</button>
-            <button onClick={() => changeLanguage("hi")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-purple-700 hover:text-purple-800">हिंदी</button>
+          <div className="flex items-center space-x-2 bg-black rounded-lg p-1 relative z-[10000]">
+            {icon && (
+          <button onClick={() => setShowWeather(true)}>
+            <img src={icon} alt="weather icon" className="w-12 h-12" />
+          </button>
+        )}
+
+        {weather && showWeather &&
+        createPortal(
+        <div className="fixed top-16 right-0 bg-white shadow-xl rounded-xl p-6 w-64 border border-purple-200 z-[9999]">
+          <div className="absolute top-2 right-2"><button onClick={()=>setShowWeather(false)}>✖</button></div>
+          <div className="flex">
+            <img src={icon} alt="weather icon" />
+            <strong>{weather.description}</strong>
+          </div>
+          <div className="flex flex-col space-y-2 text-purple-600">
+            <p><strong>Location</strong> : {loc}</p>
+            <p>💧 : {weather.humidity}</p>
+            <p>🌡️ : {weather.temp}</p>
+          </div>
+        </div>,document.body
+        )
+        }
+
+  
+            <button onClick={() => changeLanguage("en")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-white hover:text-purple-600">English</button>
+            <button onClick={() => changeLanguage("hi")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-white hover:text-purple-600">हिंदी</button>
           </div>
           <button onClick={() => signOut({ callbackUrl: "/" })} className="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">{t("sgnO")}</button>
         </div>
