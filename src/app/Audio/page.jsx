@@ -1,6 +1,8 @@
 "use client"
 import { useState, useRef } from "react"
 import { MicrophoneIcon, PlayIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/solid"
+import i18n from "./../../i18n";
+import { useTranslation } from "react-i18next";
 
 export default function AudioRecorder() {
   const [recording, setRecording] = useState(false)
@@ -9,6 +11,10 @@ export default function AudioRecorder() {
   const [loading, setLoading] = useState(false)
   const mediaRecorderRef = useRef(null)
   const chunksRef = useRef([])
+  const {t} = useTranslation();
+  const changeLanguage= (lang) => {
+    i18n.changeLanguage(lang);
+  }
 
   const startRecording = async () => {
     try {
@@ -65,18 +71,25 @@ export default function AudioRecorder() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <div className="flex justify-end">
+        <div className="bg-black rounded-md p-2">
+        <button onClick={() => changeLanguage("en")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 bg-black hover:bg-white hover:shadow-sm text-white hover:text-purple-600">English</button>
+        <button onClick={() => changeLanguage("hi")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 bg-black hover:bg-white hover:shadow-sm text-white hover:text-purple-600">हिंदी</button>
+        </div>
+      </div>
+    <div className="flex items-center justify-center p-4">
       <div className="w-full max-w-md mx-auto">
         {/* Main Card */}
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 backdrop-blur-sm">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <MicrophoneIcon className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">Voice Recorder</h1>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">{t("recorder")}</h1>
             <p className="text-slate-600 dark:text-slate-400 text-sm">
-              Record your voice and get instant transcription
+              {t("recorderFollowUp")}
             </p>
           </div>
 
@@ -90,7 +103,7 @@ export default function AudioRecorder() {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-white rounded-sm animate-pulse"></div>
-                  <span>Stop Recording</span>
+                  <span>{t("stopRecord")}</span>
                 </div>
               </button>
             ) : (
@@ -101,7 +114,7 @@ export default function AudioRecorder() {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-white rounded-full"></div>
-                  <span>Start Recording</span>
+                  <span>{t("startRecord")}</span>
                 </div>
               </button>
             )}
@@ -157,6 +170,7 @@ export default function AudioRecorder() {
           )}
         </div>
       </div>
+    </div>
     </div>
   )
 }

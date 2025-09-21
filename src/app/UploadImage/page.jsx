@@ -71,6 +71,26 @@ export default function UploadImage({
     inputRef.current?.click()
   }
 
+  const handleSubmit=async()=>{
+    if(!preview){
+        return;
+    }
+    const image = inputRef.current.files[0];
+    const formdata = new FormData();
+    formdata.append("image",image);
+    try {
+    const res = await fetch("http://127.0.0.1:8000/predict", {
+      method: "POST",
+      body: formdata,
+    })
+    const data = await res.json()
+    alert(`Prediction: ${data.class} (Confidence: ${(data.confidence * 100).toFixed(2)}%)`)
+  } catch (err) {
+    console.error(err)
+    alert("Error while predicting")
+  }
+  }
+
   const clearPreview = () => {
     setPreview(null)
     setError(null)
@@ -100,13 +120,7 @@ export default function UploadImage({
             <img src={preview || "/placeholder.svg"} alt="Preview" className="w-full h-full object-cover rounded-md" />
             <button
               onClick={(e) => {e.stopPropagation();clearPreview()}}
-              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-            >
-              <X size={16} />
-            </button>
-          </div>
-          <div className="flex justify-center items-center mb-2">
-            <button className="px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg text-white">Proceed</button>
+              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"><X size={16} /></button>
           </div>
           </div>
         ) : (
@@ -129,7 +143,9 @@ export default function UploadImage({
           </div>
         )}
       </div>
-
+      <div className="flex justify-center items-center mb-2">
+            <button className="px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg text-white" onClick={handleSubmit}>Proceed</button>
+        </div>
       {error && <p className="mt-2 text-sm text-red-600 text-center">{error}</p>}
     </div>
   )

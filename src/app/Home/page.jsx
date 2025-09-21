@@ -250,8 +250,8 @@ export default function Home() {
         {uploadOptions && (
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 animate-fade-in">
-              <h2 className="text-4xl font-bold text-gray-800 mb-4">Get your queries cleared</h2>
-              <p className="text-xl text-gray-600">Choose your preferred way to interact with FarmVisor</p>
+              <h2 className="text-4xl font-bold text-gray-800 mb-4">{t("queries")}</h2>
+              <p className="text-xl text-gray-600">{t("choose")}</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
@@ -263,8 +263,8 @@ export default function Home() {
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("text")}</h3>
-                  <p className="text-gray-600 mb-6">Type your questions about crops, weather, or farming techniques</p>
-                  <button onClick={handleText} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl">Start Typing</button>
+                  <p className="text-gray-600 mb-6">{t("writeText")}</p>
+                  <button onClick={handleText} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl">{t("startTyping")}</button>
                 </div>
               </div>
 
@@ -276,8 +276,8 @@ export default function Home() {
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("audio")}</h3>
-                  <p className="text-gray-600 mb-6">Speak naturally in your preferred language for instant help</p>
-                  <button onClick={() => router.push("/Audio")} className="w-full py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-bold hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl">Start Speaking</button>
+                  <p className="text-gray-600 mb-6">{t("recordAudio")}</p>
+                  <button onClick={() => router.push("/Audio")} className="w-full py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-bold hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl">{t("startSpeaking")}</button>
                 </div>
               </div>
 
@@ -289,8 +289,8 @@ export default function Home() {
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("images")}</h3>
-                  <p className="text-gray-600 mb-6">Upload photos of crops, pests, or diseases for instant analysis</p>
-                  <button className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl">Upload Photo</button>
+                  <p className="text-gray-600 mb-6">{t("uploadImage")}</p>
+                  <button className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl" onClick={()=>router.push('/UploadImage')}>{t("startUploading")}</button>
                 </div>
               </div>
             </div>
@@ -300,17 +300,17 @@ export default function Home() {
         {text && (
           <div className="max-w-2xl mx-auto animate-fade-in">
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-purple-100">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Ask Your Question</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">{t("ask")}</h3>
               <div className="space-y-4">
                 <textarea
                   ref={txt}
-                  placeholder="Enter your farming question here..."
+                  placeholder={t("placeholder")}
                   className="w-full p-4 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 resize-none h-32 text-gray-700"
                 />
-                <button onClick={handleTextSubmission} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl">Get AI Advice</button>
+                <button onClick={handleTextSubmission} className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-bold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl">{t("getResp")}</button>
               </div>
             </div>
-            <button className="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg py-3 px-4 m-4" onClick={()=>handleBack()}>Go Back</button>
+            <button className="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg py-3 px-4 m-4" onClick={()=>handleBack()}>{t("goBack")}</button>
           </div>
         )}
       </div>
