@@ -11,6 +11,7 @@ export default function UploadImage({
   const [dragActive, setDragActive] = useState(false)
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState(null)
+  const [cropDisease,setCropDisease] = useState("")
   const inputRef = useRef(null)
 
   const handleFiles = useCallback(
@@ -84,7 +85,8 @@ export default function UploadImage({
       body: formdata,
     })
     const data = await res.json()
-    alert(`Prediction: ${data.class} (Confidence: ${(data.confidence * 100).toFixed(2)}%)`)
+    setCropDisease(data.class);
+    document.body.style.backgroundColor='white'
   } catch (err) {
     console.error(err)
     alert("Error while predicting")
@@ -100,6 +102,7 @@ export default function UploadImage({
   }
 
   return (
+    <div>
     <div className={"w-full max-w-md mx-auto items-center max-h-screen mt-4"}>
       <div
         className={`relative border-2 border-dashed rounded-lg transition-all duration-200 cursor-pointer group
@@ -147,6 +150,34 @@ export default function UploadImage({
             <button className="px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg text-white" onClick={handleSubmit}>Proceed</button>
         </div>
       {error && <p className="mt-2 text-sm text-red-600 text-center">{error}</p>}
+    </div>
+    {cropDisease && (<div className="fixed inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex flex-col justify-center items-center backdrop-blur-sm">
+  <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 max-w-md mx-4 shadow-2xl">
+    
+      <div className="text-center space-y-6">
+        <div className="w-16 h-16 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-4">
+          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        
+        <h3 className="text-xl font-bold text-white mb-3">Disease Detected</h3>
+        
+        <p className="text-white/90 leading-relaxed">
+          As per given image, disease detected is: <span className="font-semibold text-white">{cropDisease}</span>. 
+          Do you want me to show detailed analysis on this?
+        </p>
+        <button className="bg-white px-4 py-3 rounded-lg text-black">Yes</button>
+        
+        {/* 3-dot loading animation */}
+        <div className="flex justify-center space-x-2 mt-6">
+          <div className="w-6 h-6 bg-white/40 rounded-full animate-pulse" style={{animationDelay: '0s', animationDuration: '1.5s'}}></div>
+          <div className="w-6 h-6 bg-white/40 rounded-full animate-pulse" style={{animationDelay: '0.5s', animationDuration: '1.5s'}}></div>
+          <div className="w-6 h-6 bg-white/40 rounded-full animate-pulse" style={{animationDelay: '1s', animationDuration: '1.5s'}}></div>
+        </div>
+      </div>
+  </div>
+</div>)}
     </div>
   )
 }

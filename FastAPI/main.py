@@ -1,4 +1,3 @@
-# fastapi_app.py
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
@@ -12,7 +11,7 @@ app = FastAPI()
 # Enable CORS for local dev (adjust for production)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow localhost:3000 etc.
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,7 +35,7 @@ def preprocess_image(image_bytes):
     img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     img = img.resize(IMG_SIZE)
     img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)  # batch dimension
+    img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
 def get_model():

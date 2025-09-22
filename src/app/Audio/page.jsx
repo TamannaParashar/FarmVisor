@@ -73,7 +73,7 @@ export default function AudioRecorder() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="flex justify-end">
-        <div className="bg-black rounded-md p-2">
+        <div className="bg-black rounded-md p-1">
         <button onClick={() => changeLanguage("en")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 bg-black hover:bg-white hover:shadow-sm text-white hover:text-purple-600">English</button>
         <button onClick={() => changeLanguage("hi")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 bg-black hover:bg-white hover:shadow-sm text-white hover:text-purple-600">हिंदी</button>
         </div>
