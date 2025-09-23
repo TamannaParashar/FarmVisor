@@ -52,6 +52,12 @@ export default function Home() {
         body: JSON.stringify({ pincode }),
       })
       const data = await res.json()
+      if(!res.ok){
+        alert(t("pincodeAlert"))
+        setProceed("done")
+        setLoading(false)
+        return;
+      }
       console.log(data)
       setIcon(data.weather.icon)
       setWeather(data.weather);
