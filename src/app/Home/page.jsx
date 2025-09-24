@@ -16,6 +16,7 @@ export default function Home() {
   const [weather,setWeather] = useState("")
   const [loc,setLoc] = useState("")
   const [showWeather, setShowWeather] = useState(false);
+  const [textQuery,setTextQuery] = useState("")
   const router = useRouter()
   const { t } = useTranslation()
   const changeLanguage = (lang) => {
@@ -49,7 +50,7 @@ export default function Home() {
       const res = await fetch("/api/locationWeather", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pincode }),
+        body: JSON.stringify({ pincode,lang:i18n.language }),
       })
       const data = await res.json()
       if(!res.ok){
@@ -84,6 +85,7 @@ export default function Home() {
       body: JSON.stringify({ query }),
     })
     await text.json()
+    setTextQuery("")
   }
 
   const handleBack=()=>{
@@ -295,7 +297,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">{t("images")}</h3>
-                  <p className="text-gray-600 mb-6">{t("uploadImage")}</p>
+                  <p className="text-gray-600 mb-6">{t("uploaddImage")}</p>
                   <button className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl" onClick={()=>router.push('/UploadImage')}>{t("startUploading")}</button>
                 </div>
               </div>
@@ -309,7 +311,7 @@ export default function Home() {
               <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">{t("ask")}</h3>
               <div className="space-y-4">
                 <textarea
-                  ref={txt}
+                  ref={txt} value={textQuery} onChange={(e)=>setTextQuery(e.target.value)}
                   placeholder={t("placeholder")}
                   className="w-full p-4 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 resize-none h-32 text-gray-700"
                 />

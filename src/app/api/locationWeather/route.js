@@ -1,10 +1,11 @@
+import i18n from "@/i18n"
 import { NextResponse } from "next/server"
 
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY
 
 export async function POST(req) {
   try {
-    const { pincode } = await req.json()
+    const { pincode,lang="en" } = await req.json()
 
     // Getting lat/lon from OpenStreetMap Nominatim
     const latlong = await fetch(
@@ -23,7 +24,7 @@ export async function POST(req) {
 
     //Getting weather data from OpenWeatherMap
     const weatherRes = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=${lang}`
     )
     if (!weatherRes.ok) {
       const errData = await weatherRes.json()
