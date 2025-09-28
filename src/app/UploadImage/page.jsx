@@ -93,6 +93,13 @@ export default function UploadImage({
     const data = await res.json()
     setCropDisease(data.class);
     document.body.style.backgroundColor='white'
+    const getCrop = await fetch('/api/detectedDisease',{
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ class: data.class })
+
+    })
+    await getCrop.json()
   } catch (err) {
     console.error(err)
     alert("Error while predicting")
