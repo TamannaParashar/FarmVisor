@@ -6,17 +6,19 @@ import { useRef, useState } from "react"
 import "../style.css"
 import { useRouter } from "next/navigation"
 import { createPortal } from "react-dom"
+import ReactMarkdown from "react-markdown"
 
 export default function Home() {
-  const [pin, setPin] = useState(true)
-  const [loading, setLoading] = useState(false)
-  const [uploadOptions, setUploadOptions] = useState(false)
-  const [text, setText] = useState(false)
+  const [pin, setPin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [uploadOptions, setUploadOptions] = useState(false);
+  const [text, setText] = useState(false);
   const [icon,setIcon] = useState();
-  const [weather,setWeather] = useState("")
-  const [loc,setLoc] = useState("")
+  const [weather,setWeather] = useState("");
+  const [loc,setLoc] = useState("");
   const [showWeather, setShowWeather] = useState(false);
-  const [textQuery,setTextQuery] = useState("")
+  const [textQuery,setTextQuery] = useState("");
+  const [queryResp,setQueryResp] = useState("");
   const router = useRouter()
   const { t } = useTranslation()
   const changeLanguage = (lang) => {
@@ -82,9 +84,10 @@ export default function Home() {
     const text = await fetch("/api/addFarmer", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query,lang: i18n.language,loca:loc,desp:weather.description,humidity:weather.humidity,temp:weather.temp }),
     })
-    await text.json()
+    const res = await text.json()
+    setQueryResp(res.ans)
     setTextQuery("")
   }
 
@@ -321,6 +324,12 @@ export default function Home() {
             <button className="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg py-3 px-4 m-4" onClick={()=>handleBack()}>{t("goBack")}</button>
           </div>
         )}
+        {queryResp && 
+        <div>
+          <h3 className="text-3xl text-center color-purple-600 font-bold">{t("theAns")}</h3>
+          <ReactMarkdown>{queryResp}</ReactMarkdown>
+        </div>
+        }
       </div>
     </div>
   )
