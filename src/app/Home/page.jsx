@@ -94,6 +94,7 @@ export default function Home() {
   const handleBack=()=>{
     setUploadOptions(true);
     setText(false);
+    setQueryResp("")
   }
 
   return (
@@ -139,6 +140,7 @@ export default function Home() {
   
             <button onClick={() => changeLanguage("en")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-white hover:text-purple-600">English</button>
             <button onClick={() => changeLanguage("hi")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-white hover:text-purple-600">हिंदी</button>
+            <button onClick={() => changeLanguage("kn")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-white hover:text-purple-600">ಕನ್ನಡ</button>
           </div>
           <button onClick={() => signOut({ callbackUrl: "/" })} className="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">{t("sgnO")}</button>
         </div>
