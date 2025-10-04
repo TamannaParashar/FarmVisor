@@ -76,7 +76,7 @@ export async function POST(req) {
       })
     })
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "models/gemini-2.5-flash" })
+    const model = genAI.getGenerativeModel({model : "models/gemini-2.5-flash"})
     const prompt = `
         You are an expert agricultural advisor. A farmer has asked the following question:
 

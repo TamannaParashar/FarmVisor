@@ -3,6 +3,7 @@ import i18n from "./../../i18n"
 import { useState, useRef, useCallback } from "react"
 import { Upload, X, ImageIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import ReactMarkdown from "react-markdown"
 
 export default function UploadImage({
   onImageSelect,
@@ -12,7 +13,10 @@ export default function UploadImage({
   const [dragActive, setDragActive] = useState(false)
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState(null)
+  const [showDetection,setShowDetection] = useState(true)
   const [cropDisease,setCropDisease] = useState("")
+  const [showInfo,setShowInfo] = useState(false)
+  const [info,setInfo] = useState("")
   const inputRef = useRef(null)
 
   const {t} = useTranslation();
@@ -46,6 +50,8 @@ export default function UploadImage({
     },
     [acceptedTypes, maxSize, onImageSelect],
   )
+
+  const infoRef = useRef(null);
 
   const handleDrag = useCallback((e) => {
     e.preventDefault()
@@ -83,6 +89,7 @@ export default function UploadImage({
         return;
     }
     const image = inputRef.current.files[0];
+
     const formdata = new FormData();
     formdata.append("image",image);
     try {
@@ -99,11 +106,20 @@ export default function UploadImage({
       body: JSON.stringify({ class: data.class })
 
     })
-    await getCrop.json()
+    const diseaseRes = await getCrop.json()
+    setInfo(diseaseRes.cropDiseaseResp)
   } catch (err) {
     console.error(err)
     alert("Error while predicting")
   }
+  }
+
+  const handleCropInfo=()=>{
+    setShowDetection(false);
+    setShowInfo(true);
+    setTimeout(() => {
+        infoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }
 
   const clearPreview = () => {
@@ -123,7 +139,7 @@ export default function UploadImage({
         <button onClick={() => changeLanguage("kn")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-white hover:text-purple-600">ಕನ್ನಡ</button>
         </div>
       </div>
-      <div className="w-full max-w-md mx-auto items-center max-h-screen mt-4">
+      <div className="w-full max-w-md mx-auto items-center mt-4">
         <div className={`relative border-2 border-dashed rounded-lg transition-all duration-200 cursor-pointer group 
           ${dragActive ? "border-purple-600 bg-purple-50 scale-105" : "border-gray-400 hover:border-purple-400 hover:bg-gray-100"} 
           ${error ? "border-red-500 bg-red-50" : ""}`}
@@ -171,7 +187,7 @@ export default function UploadImage({
         {error && <p className="mt-2 text-sm text-red-600 text-center">{error}</p>}
       </div>
 
-      {cropDisease && (
+      {cropDisease && showDetection && (
         <div className="fixed inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex flex-col justify-center items-center backdrop-blur-sm">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 max-w-md mx-4 shadow-2xl">
             <div className="text-center space-y-6">
@@ -185,7 +201,7 @@ export default function UploadImage({
               <p className="text-white/90 leading-relaxed">
                 {t("detectedDiseaseText", { disease: cropDisease })}
               </p>
-              <button className="bg-white px-4 py-3 rounded-lg text-black">{t("yes")}</button>
+              <button className="bg-white px-4 py-3 rounded-lg text-black cursor-pointer" onClick={handleCropInfo}>{t("yes")}</button>
 
               <div className="flex justify-center space-x-2 mt-6">
                 <div className="w-6 h-6 bg-white/40 rounded-full animate-pulse" style={{animationDelay: '0s', animationDuration: '1.5s'}}></div>
@@ -196,6 +212,9 @@ export default function UploadImage({
           </div>
         </div>
       )}
+      <div ref={infoRef} className="m-5 border-2 border-white rounded-lg bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 text-white">
+      {info && showInfo && <ReactMarkdown>{info}</ReactMarkdown>}
+      </div>
     </div>
   )
 }
