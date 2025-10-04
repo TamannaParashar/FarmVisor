@@ -6,6 +6,7 @@ import { spawn } from "child_process"
 import fInfo from "@/app/models/farmerInfo"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
 export const config = {
   api: {
@@ -18,6 +19,9 @@ export async function POST(req) {
     const session = await getServerSession(authOptions);
     const formData = await req.formData()
     const file = formData.get("file")
+    const location = formData.get("location");
+    const weather = JSON.parse(formData.get("weather"));
+
     const email = await session.user.email;
     
     // Save uploaded file
@@ -71,8 +75,30 @@ export async function POST(req) {
         }
       })
     })
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "models/gemini-2.5-flash" })
+    const prompt = `
+        You are an expert agricultural advisor. A farmer has asked the following question:
+
+        "${transcription}"
+
+        The farmer is located in "${location}" and the current weather conditions are:
+        - Temperature: ${weather.temp}°C
+        - Humidity: ${weather.humidity}%
+        - Description: ${weather.description}
+
+        Answer the farmer's question clearly and in the same language as it was asked. 
+        Provide practical advice, step-by-step instructions if applicable, and consider the local weather conditions while giving your recommendations.
+        Keep your answer concise, simple, and easy for a farmer to understand.
+`;
+
+    const result = await model.generateContent([prompt]);
+    const response = await result.response;
+    const aiResp = await response.text();
+
     const farmer = await fInfo.findOneAndUpdate({email},{$push:{queries:transcription}},{new:true,upsert:true})
-    return NextResponse.json({ text: transcription,farmer})
+    return NextResponse.json({ text: transcription,farmer, audioQuery: aiResp})
+
   } catch (err) {
     console.error("Transcription error:", err)
     return NextResponse.json(

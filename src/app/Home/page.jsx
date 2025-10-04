@@ -62,11 +62,15 @@ export default function Home() {
         return;
       }
       console.log(data)
+
       setIcon(data.weather.icon)
       setWeather(data.weather);
       setLoc(data.location)
       setPin(false)
       setUploadOptions(true)
+
+      localStorage.setItem("weather", JSON.stringify(data.weather));
+      localStorage.setItem("loc", data.location);
     } finally {
       setLoading(false)
     }

@@ -1,14 +1,27 @@
 "use client"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { MicrophoneIcon, PlayIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/solid"
 import i18n from "./../../i18n";
 import { useTranslation } from "react-i18next";
+import ReactMarkdown from "react-markdown";
 
 export default function AudioRecorder() {
   const [recording, setRecording] = useState(false)
   const [text,setText] = useState("");
   const [audioURL, setAudioURL] = useState("")
   const [loading, setLoading] = useState(false)
+  const [audioResp,setAudioResp] = useState("")
+  const [wea,setWeather] = useState("")
+  const [loc,setLoc] = useState("")
+
+  useEffect(() => {
+  const storedWeather = JSON.parse(localStorage.getItem("weather"));
+  const storedLoc = localStorage.getItem("loc");
+  setWeather(storedWeather);
+  setLoc(storedLoc);
+}, []);
+
+
   const mediaRecorderRef = useRef(null)
   const chunksRef = useRef([])
   const {t} = useTranslation();
@@ -33,10 +46,12 @@ export default function AudioRecorder() {
         chunksRef.current = []
         const formData = new FormData()
         formData.append("file", blob, "farmer_audio.wav")
+        formData.append("weather",JSON.stringify(wea))
+        formData.append("location",loc)
         try {
           const res = await fetch("/api/audioTranscribe", {
             method: "POST",
-            body: formData,
+            body: formData
           })
 
           if (!res.ok) {
@@ -47,6 +62,8 @@ export default function AudioRecorder() {
           console.log("Transcribed text:", data.text)
           setText(data.text);
           setAudioURL(URL.createObjectURL(blob))
+          console.log("Output:", data.audioQuery)
+          setAudioResp(data.audioQuery)
         } catch (err) {
           console.error("Transcription failed:", err)
           alert("Something went wrong while transcribing audio")
@@ -71,7 +88,7 @@ export default function AudioRecorder() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="flex justify-end">
         <div className="bg-black rounded-md p-1">
         <button onClick={() => changeLanguage("en")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 bg-black hover:bg-white hover:shadow-sm text-white hover:text-purple-600">English</button>
@@ -171,6 +188,9 @@ export default function AudioRecorder() {
           )}
         </div>
       </div>
+    </div>
+    <div className="m-5 border-2 border-purple-600 rounded-lg">
+    {audioResp && <ReactMarkdown>{audioResp}</ReactMarkdown>}
     </div>
     </div>
   )
