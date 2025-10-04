@@ -13,6 +13,8 @@ export default function UploadImage({
   const [dragActive, setDragActive] = useState(false)
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [proceedAllowed,setProceedAllowed] = useState(true);
   const [showDetection,setShowDetection] = useState(true)
   const [cropDisease,setCropDisease] = useState("")
   const [showInfo,setShowInfo] = useState(false)
@@ -85,6 +87,7 @@ export default function UploadImage({
   }
 
   const handleSubmit=async()=>{
+    setLoading(true);
     if(!preview){
         return;
     }
@@ -103,7 +106,7 @@ export default function UploadImage({
     const getCrop = await fetch('/api/detectedDisease',{
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ class: data.class })
+      body: JSON.stringify({ class: data.class,lang:i18n.language })
 
     })
     const diseaseRes = await getCrop.json()
@@ -111,12 +114,15 @@ export default function UploadImage({
   } catch (err) {
     console.error(err)
     alert("Error while predicting")
+  } finally {
+  setLoading(false);
   }
   }
 
   const handleCropInfo=()=>{
     setShowDetection(false);
     setShowInfo(true);
+    setProceedAllowed(false);
     setTimeout(() => {
         infoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
@@ -139,6 +145,17 @@ export default function UploadImage({
         <button onClick={() => changeLanguage("kn")} className="px-4 py-2 rounded-md font-medium transition-all duration-200 hover:bg-white hover:shadow-sm text-white hover:text-purple-600">ಕನ್ನಡ</button>
         </div>
       </div>
+
+      {loading && !showDetection && (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <p className="text-2xl text-white">{t("loading")}</p>
+          <div className="flex space-x-2 mt-6">
+          <div className="w-6 h-6 bg-white/40 rounded-full animate-pulse" style={{animationDelay: '0s', animationDuration: '1.5s'}}></div>
+          <div className="w-6 h-6 bg-white/40 rounded-full animate-pulse" style={{animationDelay: '0.5s', animationDuration: '1.5s'}}></div>
+          <div className="w-6 h-6 bg-white/40 rounded-full animate-pulse" style={{animationDelay: '1s', animationDuration: '1.5s'}}></div>
+        </div>
+      </div> )}
+
       <div className="w-full max-w-md mx-auto items-center mt-4">
         <div className={`relative border-2 border-dashed rounded-lg transition-all duration-200 cursor-pointer group 
           ${dragActive ? "border-purple-600 bg-purple-50 scale-105" : "border-gray-400 hover:border-purple-400 hover:bg-gray-100"} 
@@ -178,11 +195,11 @@ export default function UploadImage({
           )}
         </div>
 
-        <div className="flex justify-center items-center mb-2">
+        {proceedAllowed && <div className="flex justify-center items-center mb-2">
           <button className="px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg text-white" onClick={handleSubmit}>
             {t("proceed")}
           </button>
-        </div>
+        </div>}
 
         {error && <p className="mt-2 text-sm text-red-600 text-center">{error}</p>}
       </div>

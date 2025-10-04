@@ -9,19 +9,21 @@ export async function POST(req){
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
     const model = await genAI.getGenerativeModel({model : "models/gemini-2.5-flash"})
     const prompt = `
-        You are an expert agricultural advisor.
+    You are an expert agricultural advisor.
 
-        A farmer has detected a crop disease called "${data.class}". 
-        Provide clear, concise, and practical advice for a farmer in simple language.
+    A farmer has detected a crop disease called "${data.class}". 
+    Provide clear, concise, and practical advice for a farmer in simple language.
 
-        Include the following details:
-        1. **Disease Name and Description**: What it is, how it affects the crop.
-        2. **Cure**: Step-by-step actions to treat the disease.
-        3. **Precautions**: How to prevent it in the future.
-        4. **Danger Level**: Severity and urgency of action.
+    Respond in ${data.lang === 'en' ? 'English' : data.lang === 'hi' ? 'Hindi' : 'Kannada'}.
 
-        Format the response clearly so that a farmer can easily understand and follow it. Use simple words and practical tips suitable for small-scale farming.
-    `;
+    Include the following details:
+    1. **Disease Name and Description**: What it is, how it affects the crop.
+    2. **Cure**: Step-by-step actions to treat the disease.
+    3. **Precautions**: How to prevent it in the future.
+    4. **Danger Level**: Severity and urgency of action.
+
+    Format the response clearly so that a farmer can easily understand and follow it. Use simple words and practical tips suitable for small-scale farming.
+`;
 
     const result = await model.generateContent([prompt])
     const response = result.response
