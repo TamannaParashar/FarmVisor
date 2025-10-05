@@ -18,6 +18,7 @@ export default function UploadImage({
   const [showDetection,setShowDetection] = useState(true)
   const [cropDisease,setCropDisease] = useState("")
   const [showInfo,setShowInfo] = useState(false)
+  const [confidence,setConfidence] = useState("")
   const [info,setInfo] = useState("")
   const inputRef = useRef(null)
 
@@ -101,6 +102,7 @@ export default function UploadImage({
       body: formdata,
     })
     const data = await res.json()
+    setConfidence(data.confidence)
     setCropDisease(data.class);
     document.body.style.backgroundColor='white'
     const getCrop = await fetch('/api/detectedDisease',{
@@ -118,6 +120,7 @@ export default function UploadImage({
   setLoading(false);
   }
   }
+  console.log("Confidence percentage:",confidence)
 
   const handleCropInfo=()=>{
     setShowDetection(false);

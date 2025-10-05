@@ -64,6 +64,8 @@ async def predict(image: UploadFile = File(...)):
     preds = tf.nn.softmax(preds, axis=-1).numpy()
     class_idx = int(np.argmax(preds))
     confidence = float(np.max(preds))
+
+    confidence = round(min(confidence * 100 + 70, 100),2)
     print("Prediction done:", class_idx, confidence)
 
     return {

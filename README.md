@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🌾 AI-Powered Farmer Advisory System
 
-## Getting Started
+An intelligent **AI-based farmer support platform** that provides real-time crop insights, multilingual responses, and personalized recommendations.  
+Built with cutting-edge open-source tools and models.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🧠 Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Fullstack framework:** Next.js  
+- **Backend:** FastAPI  
+- **Database:** MongoDB  
+- **AI / ML:** Whisper, Keras, Gemini (Google Generative AI)  
+- **Data:** Kaggle datasets  
+- **Storage:** Cloudinary  
+- **Maps:** OpenStreetMap  
+- **Weather API:** OpenWeatherMap  
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Features
 
-## Learn More
+- 🌐 **Multilingual Interface** — supports multiple Indian and global languages.  
+- 🗺️ **Location-Based LLM Output** — answers adapt to your location and weather.  
+- 🧠 **Crop Disease Detection** — using a custom fine-tuned Keras CNN model.  
+- 🗣️ **Audio, Text, and Image Inputs** — ask queries in any format.  
+- 💬 **LLM Response Flexibility** — choose output in text, image, or audio form.  
+- 🔒 **User Authentication** — secure and private access.  
+- 🌾 **AI-Driven Farmer Advisory** — provides crop care, fertilizer, and weather insights.  
+- 📢 **Feedback System** — users can give and view advisory feedback.  
+- 🧍 **Safe and Reliable** — ensures factual and trustworthy information.  
 
-To learn more about Next.js, take a look at the following resources:
+## 🌍 APIs & Integrations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Integration | Purpose | Description |
+|--------------|----------|-------------|
+| **OpenWeatherMap API** | Real-time weather data | Used to provide location-based crop and climate information for better advisory suggestions. |
+| **OpenStreetMap** | Geolocation & Mapping | Helps identify user location and link farm data to regional weather and soil patterns. |
+| **Cloudinary** | Image & Video Storage | Securely stores and serves user-uploaded images (crop pictures, voice query files, etc.). |
+| **Google Gemini API** | Generative AI Responses | Powers natural language and multilingual responses for farmer queries. |
+| **Kaggle Dataset Integration** | Crop Disease Training Data | Source dataset used for fine-tuning the Keras CNN model for crop disease detection. |
+| **Whisper (OpenAI)** | Speech-to-Text Conversion | Converts farmers’ audio queries to text for processing by the LLM. |
+| **MongoDB Atlas** | Database Storage | Stores user queries, history, feedback, and advisory responses. |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+📸 Demo Section
+<details> <summary>🖼️ <b>Click Here for demo pictures</b></summary>
+  ![Demo 1](public/p1.png)
+  ![Demo 2](public/p2.png)
+  ![Demo 3](public/p3.png)
+  ![Demo 4](public/p4.png)
+  ![Demo 5](public/p5.png)
+  ![Demo 6](public/p6.png)
+  ![Demo 7](public/p7.png)
+</details>
