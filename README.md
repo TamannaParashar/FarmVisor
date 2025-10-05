@@ -45,11 +45,11 @@ Built with cutting-edge open-source tools and models.
 ---
 📸 Demo Section
 <details> <summary>🖼️ <b>Click Here for demo pictures</b></summary>
-  ![Demo 2](https://github.com/user-attachments/assets/8322fb56-ee2e-49e8-857e-cea0c1434c99)
-  ![Demo 1](https://github.com/user-attachments/assets/11bbdd8b-ea9e-4dfe-be34-d738b2ed667d)
-  ![Demo 3](https://github.com/user-attachments/assets/753f5016-7317-45c6-9918-f3e5e0d71d7c)
-  ![Demo 4](https://github.com/user-attachments/assets/b7e52db2-91b8-4a83-a490-2f11adb09115)
-  ![Demo 5](https://github.com/user-attachments/assets/d2192d66-8865-419a-8c21-89c2613f132f)
-  ![Demo 6](https://github.com/user-attachments/assets/a496b88d-6c32-48d8-adf4-0f36d3e7fdae)
-  ![Demo 7](https://github.com/user-attachments/assets/953dfef8-8bfa-4832-9553-5fe2a8151c21)
+  [![Demo 1](https://github.com/user-attachments/assets/11bbdd8b-ea9e-4dfe-be34-d738b2ed667d)](https://github.com/user-attachments/assets/11bbdd8b-ea9e-4dfe-be34-d738b2ed667d)
+[![Demo 2](https://github.com/user-attachments/assets/8322fb56-ee2e-49e8-857e-cea0c1434c99)](https://github.com/user-attachments/assets/8322fb56-ee2e-49e8-857e-cea0c1434c99)
+[![Demo 3](https://github.com/user-attachments/assets/753f5016-7317-45c6-9918-f3e5e0d71d7c)](https://github.com/user-attachments/assets/753f5016-7317-45c6-9918-f3e5e0d71d7c)
+[![Demo 4](https://github.com/user-attachments/assets/b7e52db2-91b8-4a83-a490-2f11adb09115)](https://github.com/user-attachments/assets/b7e52db2-91b8-4a83-a490-2f11adb09115)
+[![Demo 5](https://github.com/user-attachments/assets/d2192d66-8865-419a-8c21-89c2613f132f)](https://github.com/user-attachments/assets/d2192d66-8865-419a-8c21-89c2613f132f)
+[![Demo 6](https://github.com/user-attachments/assets/a496b88d-6c32-48d8-adf4-0f36d3e7fdae)](https://github.com/user-attachments/assets/a496b88d-6c32-48d8-adf4-0f36d3e7fdae)
+[![Demo 7](https://github.com/user-attachments/assets/953dfef8-8bfa-4832-9553-5fe2a8151c21)](https://github.com/user-attachments/assets/953dfef8-8bfa-4832-9553-5fe2a8151c21)
 </details>
