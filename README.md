@@ -45,11 +45,11 @@ Built with cutting-edge open-source tools and models.
 ---
 📸 Demo Section
 <details> <summary>🖼️ <b>Click Here for demo pictures</b></summary>
-  ![Demo 1](public/p1.png)
-  ![Demo 2](public/p2.png)
-  ![Demo 3](public/p3.png)
-  ![Demo 4](public/p4.png)
-  ![Demo 5](public/p5.png)
-  ![Demo 6](public/p6.png)
-  ![Demo 7](public/p7.png)
+  ![Demo 1](public/demo/p1.png)
+  ![Demo 2](public/demo/p2.png)
+  ![Demo 3](public/demo/p3.png)
+  ![Demo 4](public/demo/p4.png)
+  ![Demo 5](public/demo/p5.png)
+  ![Demo 6](public/demo/p6.png)
+  ![Demo 7](public/demo/p7.png)
 </details>
