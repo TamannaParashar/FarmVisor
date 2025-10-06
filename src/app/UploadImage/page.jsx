@@ -20,6 +20,7 @@ export default function UploadImage({
   const [showInfo,setShowInfo] = useState(false)
   const [confidence,setConfidence] = useState("")
   const [info,setInfo] = useState("")
+  const [speaking, setSpeaking] = useState(false)
   const inputRef = useRef(null)
 
   const {t} = useTranslation();
@@ -138,6 +139,32 @@ export default function UploadImage({
       inputRef.current.value = ""
     }
   }
+  const stripMarkdown = (markdownText) => {
+    if (!markdownText) return ""
+    return markdownText.replace(/([*_~`])/g, "")
+  }
+  
+  // ---------- SPEAK TEXT FUNCTION ----------
+    const langMap = { en: "en-IN", hi: "hi-IN", kn: "kn-IN" }
+  
+    const speakText = (textToSpeak, langKey = i18n.language) => {
+      if (!("speechSynthesis" in window)) {
+        alert("TTS not available in this browser.")
+        return
+      }
+      if (speaking) {
+      window.speechSynthesis.cancel()
+      setSpeaking(false)
+    } else {
+      const utter = new SpeechSynthesisUtterance(textToSpeak)
+      utter.lang = langMap[langKey] || "en-IN"
+      utter.rate = 0.95
+      utter.pitch = 1
+      window.speechSynthesis.cancel()
+      window.speechSynthesis.speak(utter)
+      setSpeaking(true)
+    }
+    }
 
   return (
     <div>
@@ -233,7 +260,10 @@ export default function UploadImage({
         </div>
       )}
       <div ref={infoRef} className="m-5 border-2 border-white rounded-lg bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 text-white">
-      {info && showInfo && <ReactMarkdown>{info}</ReactMarkdown>}
+      {info && showInfo && (<div>
+      <ReactMarkdown>{info}</ReactMarkdown>
+      <button onClick={() => speakText(stripMarkdown(info))} className="mt-3 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 transition">{speaking ? "🔇 Stop Response" : "🔊 Play Response"}</button>
+      </div>)}
       </div>
     </div>
   )

@@ -19,6 +19,8 @@ export default function Home() {
   const [showWeather, setShowWeather] = useState(false);
   const [textQuery,setTextQuery] = useState("");
   const [queryResp,setQueryResp] = useState("");
+  const [speaking, setSpeaking] = useState(false)
+
   const router = useRouter()
   const { t } = useTranslation()
   const changeLanguage = (lang) => {
@@ -94,6 +96,33 @@ export default function Home() {
     setQueryResp(res.ans)
     setTextQuery("")
   }
+
+  const stripMarkdown = (markdownText) => {
+    if (!markdownText) return ""
+    return markdownText.replace(/([*_~`])/g, "")
+  }
+  
+  // ---------- SPEAK TEXT FUNCTION ----------
+    const langMap = { en: "en-IN", hi: "hi-IN", kn: "kn-IN" }
+  
+    const speakText = (textToSpeak, langKey = i18n.language) => {
+      if (!("speechSynthesis" in window)) {
+        alert("TTS not available in this browser.")
+        return
+      }
+      if (speaking) {
+      window.speechSynthesis.cancel()
+      setSpeaking(false)
+    } else {
+      const utter = new SpeechSynthesisUtterance(textToSpeak)
+      utter.lang = langMap[langKey] || "en-IN"
+      utter.rate = 0.95
+      utter.pitch = 1
+      window.speechSynthesis.cancel()
+      window.speechSynthesis.speak(utter)
+      setSpeaking(true)
+    }
+    }
 
   const handleBack=()=>{
     setUploadOptions(true);
@@ -334,6 +363,10 @@ export default function Home() {
         <div>
           <h3 className="text-3xl text-center color-purple-600 font-bold">{t("theAns")}</h3>
           <ReactMarkdown>{queryResp}</ReactMarkdown>
+          <button
+      onClick={() => speakText(stripMarkdown(queryResp))}
+      className="mt-3 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
+    >{speaking ? "🔇 Stop Response" : "🔊 Play Response"}</button>
         </div>
         }
       </div>

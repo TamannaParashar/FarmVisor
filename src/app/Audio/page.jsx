@@ -13,6 +13,7 @@ export default function AudioRecorder() {
   const [audioResp,setAudioResp] = useState("")
   const [wea,setWeather] = useState("")
   const [loc,setLoc] = useState("")
+  const [speaking, setSpeaking] = useState(false)
 
   useEffect(() => {
   const storedWeather = JSON.parse(localStorage.getItem("weather"));
@@ -85,6 +86,33 @@ export default function AudioRecorder() {
       mediaRecorderRef.current.stop()
       setRecording(false)
     }
+  }
+
+const stripMarkdown = (markdownText) => {
+  if (!markdownText) return ""
+  return markdownText.replace(/([*_~`])/g, "")
+}
+
+// ---------- SPEAK TEXT FUNCTION ----------
+  const langMap = { en: "en-IN", hi: "hi-IN", kn: "kn-IN" }
+
+  const speakText = (textToSpeak, langKey = i18n.language) => {
+    if (!("speechSynthesis" in window)) {
+      alert("TTS not available in this browser.")
+      return
+    }
+    if (speaking) {
+    window.speechSynthesis.cancel()
+    setSpeaking(false)
+  } else {
+    const utter = new SpeechSynthesisUtterance(textToSpeak)
+    utter.lang = langMap[langKey] || "en-IN"
+    utter.rate = 0.95
+    utter.pitch = 1
+    window.speechSynthesis.cancel()
+    window.speechSynthesis.speak(utter)
+    setSpeaking(true)
+  }
   }
 
   return (
@@ -190,7 +218,14 @@ export default function AudioRecorder() {
       </div>
     </div>
     <div className="m-5 border-2 border-purple-600 rounded-lg">
-    {audioResp && <ReactMarkdown>{audioResp}</ReactMarkdown>}
+    {audioResp && (
+    <div>
+    <ReactMarkdown>{audioResp}</ReactMarkdown>
+    <button
+      onClick={() => speakText(stripMarkdown(audioResp))}
+      className="mt-3 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
+    >{speaking ? "🔇 Stop Response" : "🔊 Play Response"}</button>
+    </div>)}
     </div>
     </div>
   )

@@ -33,7 +33,7 @@ export async function POST(req){
     const result = await model.generateContent([prompt]);
     const response = await result.response;
     const aiResp = await response.text();
-
+    
     return new Response(JSON.stringify({success: true,ans:aiResp,text:query,farmer}), {status: 201,
     headers: { "Content-Type": "application/json" },})
   }catch(e){
