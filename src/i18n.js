@@ -59,6 +59,8 @@ const resources = {
       yes: "Yes",
       errorWhilePredicting: "Error while predicting",
       removeImage: "Remove Image",
+      stopSpeaking: "🔇 Stop Response",
+      startSpeaking: "🔊 Play Response",
     },
   },
   hi: {
@@ -117,6 +119,8 @@ const resources = {
       yes: "हाँ",
       errorWhilePredicting: "भविष्यवाणी करते समय त्रुटि",
       removeImage: "छवि हटाएँ",
+      stopSpeaking: "🔇 जवाब देना बंद",
+      startSpeaking: "🔊 बोलना शुरू",
     },
   },
   kn: {
@@ -175,6 +179,8 @@ const resources = {
       yes: "ಹೌದು",
       errorWhilePredicting: "ಭವಿಷ್ಯವಾಣಿ ಮಾಡುವಾಗ ದೋಷವಿದೆ",
       removeImage: "ಚಿತ್ರ ತೆಗೆದುಹಾಕಿ",
+      stopSpeaking: "🔇 ಮಾತನಾಡುವುದನ್ನು ನಿಲ್ಲಿಸಿ",
+      startSpeaking: "🔊 ಮಾತನಾಡಲು ಪ್ರಾರಂಭಿಸಿ",
     }
   }
 }

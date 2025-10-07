@@ -224,7 +224,7 @@ const stripMarkdown = (markdownText) => {
     <button
       onClick={() => speakText(stripMarkdown(audioResp))}
       className="mt-3 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
-    >{speaking ? "🔇 Stop Response" : "🔊 Play Response"}</button>
+    >{speaking ? t("stopSpeaking") : t("startSpeaking")}</button>
     </div>)}
     </div>
     </div>

@@ -2,7 +2,7 @@
 import { useTranslation } from "react-i18next"
 import i18n from "./../../i18n"
 import { signOut } from "next-auth/react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "../style.css"
 import { useRouter } from "next/navigation"
 import { createPortal } from "react-dom"
@@ -25,6 +25,34 @@ export default function Home() {
   const { t } = useTranslation()
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang)
+  }
+  const [open, setOpen] = useState(false)
+  const textareaRef = useRef(null)
+
+  const addFeedBack=async()=>{
+    const feedbackText = textareaRef.current.value;
+    if (!feedbackText) {
+    alert("Please write something before submitting!");
+    return;
+    }
+    const res = await fetch('/api/feedback',{
+    method : "POST",
+    headers : { "Content-Type": "application/json" },
+    body : JSON.stringify({feedbackText})
+  })
+  alert("Thankyou for your valuable feedback")
+  setOpen(false);
+  await res.json();
+}
+
+  useEffect(() => {
+    if (open && textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [open])
+
+  function onKeyDown(e) {
+    if (e.key === "Escape") setOpen(false)
   }
   const [proceed,setProceed] = useState("done")
 
@@ -366,10 +394,60 @@ export default function Home() {
           <button
       onClick={() => speakText(stripMarkdown(queryResp))}
       className="mt-3 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
-    >{speaking ? "🔇 Stop Response" : "🔊 Play Response"}</button>
+    >{speaking ? t("stopSpeaking") : t("startSpeaking")}</button>
         </div>
         }
       </div>
+
+
+      <div className="inline-block" onKeyDown={onKeyDown}>
+      {/* Trigger */}
+      <button
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
+        className="appearance-none bg-transparent border-0 p-0 m-0 cursor-pointer"
+      >
+        <div>
+          <p className="text-foreground underline underline-offset-4 hover:no-underline text-2xl font-bold">Feedback?</p>
+        </div>
+      </button>
+
+      {/* Modal */}
+      {open ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          role="presentation"
+          onClick={() => setOpen(false)}
+        >
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-foreground/50" aria-hidden="true" />
+
+          {/* Dialog */}
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Feedback input"
+            className="relative z-10 w-full max-w-md rounded-lg border border-border bg-background p-4 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* The single field */}
+            <label htmlFor="feedback-textarea" className="sr-only">
+              Write down your thoughts in this platform
+            </label>
+            <textarea
+              name="feedback"
+              id="feedback-textarea"
+              ref={textareaRef}
+              placeholder="Write down your thoughts in this platform"
+              className="w-full min-h-32 resize-y rounded-md border border-border bg-background p-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+            <button onClick={addFeedBack} className="mt-3 w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700">Submit</button>
+          </div>
+          </div>
+      ) : null}
+    </div>
     </div>
   )
 }

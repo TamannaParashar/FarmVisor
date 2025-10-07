@@ -262,7 +262,7 @@ export default function UploadImage({
       <div ref={infoRef} className="m-5 border-2 border-white rounded-lg bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 text-white">
       {info && showInfo && (<div>
       <ReactMarkdown>{info}</ReactMarkdown>
-      <button onClick={() => speakText(stripMarkdown(info))} className="mt-3 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 transition">{speaking ? "🔇 Stop Response" : "🔊 Play Response"}</button>
+      <button onClick={() => speakText(stripMarkdown(info))} className="mt-3 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 transition">{speaking ? t("stopSpeaking") : t("startSpeaking")}</button>
       </div>)}
       </div>
     </div>
