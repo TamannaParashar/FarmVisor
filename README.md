@@ -29,6 +29,7 @@ Built with cutting-edge open-source tools and models.
 - 🌾 **AI-Driven Farmer Advisory** — provides crop care, fertilizer, and weather insights.  
 - 📢 **Feedback System** — users can give and view advisory feedback.  
 - 🧍 **Safe and Reliable** — ensures factual and trustworthy information.  
+- 🤝 **Collaborative Platform** – Share your thoughts, and we work on them to make the platform better. 
 
 ## 🌍 APIs & Integrations
 
