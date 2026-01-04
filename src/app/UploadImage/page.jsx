@@ -95,7 +95,7 @@ export default function UploadImage({
 
   const image = inputRef.current.files[0];
   const formData = {
-    api_key: process.env.DISEASE_DETECTION,
+    api_key: "bRfzuevId4vgCdxSjkawtkrQTQezQWeoqyJ3zxksfZ7w69jgyz",
     images: [],
     modifiers: ["similar_images"],
     plant_language: i18n.language || "en",
@@ -106,6 +106,15 @@ export default function UploadImage({
   const reader = new FileReader();
   reader.onloadend = async () => {
     const base64Image = reader.result.split(",")[1];
+    // 1️⃣ Upload to Cloudinary
+    const cloudRes = await fetch("/api/uploadImg", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64: base64Image }),
+    })
+
+    const cloudData = await cloudRes.json()
+    console.log("Cloudinary URL:", cloudData.url)
     formData.images.push(base64Image);
 
     try {
