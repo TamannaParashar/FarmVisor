@@ -95,7 +95,7 @@ export default function UploadImage({
 
   const image = inputRef.current.files[0];
   const formData = {
-    api_key: "bRfzuevId4vgCdxSjkawtkrQTQezQWeoqyJ3zxksfZ7w69jgyz",
+    api_key: process.env.DISEASE_DETECTION,
     images: [],
     modifiers: ["similar_images"],
     plant_language: i18n.language || "en",
