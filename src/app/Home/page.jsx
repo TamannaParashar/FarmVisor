@@ -18,6 +18,7 @@ export default function Home() {
   const [loc,setLoc] = useState("");
   const [showWeather, setShowWeather] = useState(false);
   const [textQuery,setTextQuery] = useState("");
+  const [answerLoading, setAnswerLoading] = useState(false)
   const [queryResp,setQueryResp] = useState("");
   const [speaking, setSpeaking] = useState(false)
 
@@ -115,6 +116,9 @@ export default function Home() {
 
   const handleTextSubmission = async () => {
     const query = txt.current.value
+    setAnswerLoading(true)       // 👈 start loading
+    setQueryResp("") 
+    try{
     const text = await fetch("/api/addFarmer", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -122,7 +126,12 @@ export default function Home() {
     })
     const res = await text.json()
     setQueryResp(res.ans)
-    setTextQuery("")
+  }catch(err){
+    console.log(err)
+  }finally{
+    setAnswerLoading(false);
+    setTextQuery("");
+  }
   }
 
   const stripMarkdown = (markdownText) => {
@@ -387,6 +396,14 @@ export default function Home() {
             <button className="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg py-3 px-4 m-4" onClick={()=>handleBack()}>{t("goBack")}</button>
           </div>
         )}
+        {answerLoading && (
+          <div className="text-center mt-6 animate-pulse">
+            <p className="text-xl font-semibold text-purple-600">
+              {t("preparingAnswer") || "Preparing your answer..."}
+            </p>
+          </div>
+        )}
+
         {queryResp && 
         <div>
           <h3 className="text-3xl text-center color-purple-600 font-bold">{t("theAns")}</h3>
@@ -398,7 +415,6 @@ export default function Home() {
         </div>
         }
       </div>
-
 
       <div className="inline-block" onKeyDown={onKeyDown}>
       {/* Trigger */}

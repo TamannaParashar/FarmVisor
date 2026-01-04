@@ -28,8 +28,31 @@ export async function POST(req){
     const result = await model.generateContent([prompt])
     const response = result.response
     const aiResp = await response.text()
+    const langMap = {
+      en: "en",
+      hi: "hi",
+      kn: "kn",
+    }
+
+    const ytQuery = encodeURIComponent(
+      `${data.class} crop disease treatment for farmers`
+    )
+
+    const ytUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=3&q=${ytQuery}&relevanceLanguage=${
+      langMap[data.lang] || "en"
+    }&key=${process.env.YOUTUBE_API_KEY}`
+
+    const ytRes = await fetch(ytUrl)
+    const ytData = await ytRes.json()
+
+    const youtubeLinks =
+      ytData.items?.map((item) => ({
+        title: item.snippet.title,
+        url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+        thumbnail: item.snippet.thumbnails.medium.url,
+      })) || []
     await detection.save();
-    return Response.json({message:"Detected crop disease added to database sucessfully",cropDiseaseResp:aiResp},{status:200});
+    return Response.json({message:"Detected crop disease added to database sucessfully",cropDiseaseResp:aiResp,youtubeLinks,},{status:200});
     }catch(e){
         return Response.json({error:"error saving detected crop disease"},{status:400});
     }

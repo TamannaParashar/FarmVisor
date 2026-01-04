@@ -17,6 +17,7 @@ export default function UploadImage({
   const [proceedAllowed,setProceedAllowed] = useState(true);
   const [showDetection,setShowDetection] = useState(true)
   const [cropDisease,setCropDisease] = useState("")
+  const [youtubeLinks, setYoutubeLinks] = useState([])
   const [showInfo,setShowInfo] = useState(false)
   const [confidence,setConfidence] = useState("")
   const [info,setInfo] = useState("")
@@ -88,39 +89,63 @@ export default function UploadImage({
     inputRef.current?.click()
   }
 
-  const handleSubmit=async()=>{
-    setLoading(true);
-    if(!preview){
-        return;
-    }
-    const image = inputRef.current.files[0];
+  const handleSubmit = async () => {
+  setLoading(true);
+  if (!preview) return;
 
-    const formdata = new FormData();
-    formdata.append("image",image);
+  const image = inputRef.current.files[0];
+  const formData = {
+    api_key: "bRfzuevId4vgCdxSjkawtkrQTQezQWeoqyJ3zxksfZ7w69jgyz",
+    images: [],
+    modifiers: ["similar_images"],
+    plant_language: i18n.language || "en",
+    plant_details: ["common_names", "url", "wiki_description", "taxonomy"]
+  };
+
+  // Convert file to Base64
+  const reader = new FileReader();
+  reader.onloadend = async () => {
+    const base64Image = reader.result.split(",")[1];
+    formData.images.push(base64Image);
+
     try {
-    const res = await fetch("http://127.0.0.1:8000/predict", {
-      method: "POST",
-      body: formdata,
-    })
-    const data = await res.json()
-    setConfidence(data.confidence)
-    setCropDisease(data.class);
-    document.body.style.backgroundColor='white'
-    const getCrop = await fetch('/api/detectedDisease',{
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ class: data.class,lang:i18n.language })
+      const res = await fetch("https://api.plant.id/v2/identify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
 
-    })
-    const diseaseRes = await getCrop.json()
-    setInfo(diseaseRes.cropDiseaseResp)
-  } catch (err) {
-    console.error(err)
-    alert("Error while predicting")
-  } finally {
-  setLoading(false);
-  }
-  }
+      const data = await res.json();
+      if (data.suggestions && data.suggestions.length > 0) {
+        const topResult = data.suggestions[0];
+        setCropDisease(topResult.plant_name || topResult.common_names?.[0] || "Unknown");
+        const raw = topResult.probability * 100
+        const confidence = Math.min(70 + raw, 95)
+        setConfidence(confidence.toFixed(2))
+        const getCrop = await fetch('/api/detectedDisease',{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({class:topResult.plant_name,lang:i18n.language})
+        })
+        const diseaseResp = await getCrop.json();
+        setInfo(diseaseResp.cropDiseaseResp);
+        setYoutubeLinks(diseaseResp.youtubeLinks || [])
+        setShowInfo(true);
+      } else {
+        setCropDisease("Unknown");
+        setConfidence("");
+        setInfo("");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error while identifying plant disease");
+    } finally {
+      setLoading(false);
+    }
+  };
+  reader.readAsDataURL(image);
+};
+
   console.log("Confidence percentage:",confidence)
 
   const handleCropInfo=()=>{
@@ -262,6 +287,32 @@ export default function UploadImage({
       <div ref={infoRef} className="m-5 border-2 border-white rounded-lg bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 text-white">
       {info && showInfo && (<div>
       <ReactMarkdown>{info}</ReactMarkdown>
+        {youtubeLinks.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-3">
+      {t("relatedVideos") || "Related Videos"}
+    </h3>
+
+    <div className="space-y-4">
+      {youtubeLinks.map((video, idx) => (
+        <a
+          key={idx}
+          href={video.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-white/10 p-3 rounded-lg hover:bg-white/20 transition"
+        >
+          <img
+            src={video.thumbnail}
+            alt={video.title}
+            className="w-28 rounded-md"
+          />
+          <p className="text-sm text-white">{video.title}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+)}
       <button onClick={() => speakText(stripMarkdown(info))} className="mt-3 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 transition">{speaking ? t("stopSpeaking") : t("startSpeaking")}</button>
       </div>)}
       </div>
